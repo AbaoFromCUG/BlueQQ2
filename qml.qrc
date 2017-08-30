@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>BubbleList.qml</file>
+        <file>MessageItem.qml</file>
+    </qresource>
+</RCC>

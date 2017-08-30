@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Popup</class>
+ <widget class="QDialog" name="Popup">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>110</width>
+    <height>140</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgba(191, 64, 64, 0);</string>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>110</width>
+     <height>140</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="res.qrc">:/images/widgets/wrapPop.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn1">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>8</y>
+     <width>110</width>
+     <height>44</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton#btn1{
+	font: 14pt &quot;Droid Sans Fallback&quot;;
+background-color: rgb(255, 255, 255);
+border:none;
+}
+QPushButton#btn1:hover{
+background-color: rgb(156, 156, 156);
+border:none;
+}</string>
+   </property>
+   <property name="text">
+    <string>    隐身</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn2">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>52</y>
+     <width>110</width>
+     <height>44</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton#btn2{
+	font: 14pt &quot;Droid Sans Fallback&quot;;
+background-color: rgb(255, 255, 255);
+border:none;
+}
+QPushButton#btn2:hover{
+background-color: rgb(156, 156, 156);
+border:none;
+}</string>
+   </property>
+   <property name="text">
+    <string>个人资料</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btn3">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>96</y>
+     <width>110</width>
+     <height>44</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton#btn3{
+	font: 14pt &quot;Droid Sans Fallback&quot;;
+background-color: rgb(255, 255, 255);
+border:none;
+}
+QPushButton#btn3:hover{
+background-color: rgb(156, 156, 156);
+border:none;
+}</string>
+   </property>
+   <property name="text">
+    <string>退出</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="widget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>18</x>
+     <y>28</y>
+     <width>9</width>
+     <height>9</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 194, 75);
+border-radius: 4px;</string>
+   </property>
+  </widget>
+ </widget>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
+ <connections/>
+</ui>

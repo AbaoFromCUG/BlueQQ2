@@ -1,0 +1,45 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/demon/3.jpeg</file>
+        <file>images/demon/friend.jpg</file>
+        <file>images/demon/friend2.jpg</file>
+        <file>images/demon/group1.jpg</file>
+        <file>images/demon/group2.jpg</file>
+        <file>images/demon/selfImg.jpg</file>
+        <file>images/login/login_bg.png</file>
+        <file>images/login/login_button_click.png</file>
+        <file>images/login/login_button_naive.png</file>
+        <file>images/welcome/bg.png</file>
+        <file>images/welcome/over.gif</file>
+        <file>images/welcome/welcome_bg_1.jpg</file>
+        <file>images/welcome/welcome_bg_2.jpg</file>
+        <file>images/widget/friends.png</file>
+        <file>images/widget/ling.png</file>
+        <file>images/widget/qr_demon.png</file>
+        <file>images/widgets/back.png</file>
+        <file>images/widgets/close.png</file>
+        <file>images/widgets/friend1.png</file>
+        <file>images/widgets/friend2.png</file>
+        <file>images/widgets/friends.png</file>
+        <file>images/widgets/ling.png</file>
+        <file>images/widgets/listHeader1.png</file>
+        <file>images/widgets/max.png</file>
+        <file>images/widgets/message1.png</file>
+        <file>images/widgets/message2.png</file>
+        <file>images/widgets/min.png</file>
+        <file>images/widgets/normal.png</file>
+        <file>images/widgets/phiz.png</file>
+        <file>images/widgets/picture.png</file>
+        <file>images/widgets/qr_demon.png</file>
+        <file>images/widgets/round.png</file>
+        <file>images/widgets/seting1.png</file>
+        <file>images/widgets/seting2.png</file>
+        <file>images/widgets/time.png</file>
+        <file>images/widgets/triangle1.png</file>
+        <file>images/widgets/triangle2.png</file>
+        <file>images/widgets/wrapPop.png</file>
+        <file>images/widgets/menu.png</file>
+        <file>images/widgets/budder.png</file>
+        <file>images/widgets/budder2.png</file>
+    </qresource>
+</RCC>
