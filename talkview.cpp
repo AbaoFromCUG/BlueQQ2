@@ -2,20 +2,30 @@
 #include "ui_talkview.h"
 #include<QQuickItem>
 #include<QQuickView>
+#include<QVariant>
 #include<QQmlContext>
+#include"message/messageitem.h"
 #include"mynetworker.h"
 TalkView::TalkView(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::TalkView)
 {
     ui->setupUi(this);
+
+
+
+
+
+    QList<QObject*> list;
+    list.append(new MessageItem());
+    list.append(new MessageItem());
+    list.append(new MessageItem());
+    list.append(new MessageItem());
+    QQmlContext *ctxt = ui->bubbleList->rootContext();
+    ctxt->setContextProperty("myModel", QVariant::fromValue(list));
+
     QUrl source("qrc:/BubbleList.qml");
-    //ui->bubbleList->setResizeMode(QQuickWidget::SizeRootObjectToView );
     ui->bubbleList->setSource(source);
-
-
-
-
     //信号槽
     connect(ui->backBar,&Mylabel::clicked,[=](){
         barClicked(0);
@@ -67,7 +77,7 @@ void TalkView::on_sendButton_clicked()
 void TalkView::showMessage(ChatMessageInfoList *list)
 {
 
-    QQmlContext *ctxt = ui->bubbleList->rootContext();
+    //QQmlContext *ctxt = ui->bubbleList->rootContext();
     //ctxt->setContextProperty("", QVariant::fromValue(&list));
 
 

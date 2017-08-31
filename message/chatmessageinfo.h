@@ -13,6 +13,7 @@
 #include <QTimer>
 #include <QString>
 #include <QDir>
+
 /*
  * 提供消息相关的处理
  */
@@ -128,6 +129,8 @@ public:
     GroupInfo() {}
     virtual ~GroupInfo() {}
 };
+
+
 
 
 #endif // CHATMESSAGEINFO_H

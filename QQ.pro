@@ -50,7 +50,8 @@ SOURCES += \
     lib/framelesshelper.cpp \
     message/chatmessageinfo.cpp \
     message/databaseoperation.cpp \
-    message/messagemanager.cpp
+    message/messagemanager.cpp \
+    message/messageitem.cpp
 
 
 
@@ -75,7 +76,8 @@ HEADERS += \
     lib/framelesshelper.h \
     message/chatmessageinfo.h \
     message/databaseoperation.h \
-    message/messagemanager.h
+    message/messagemanager.h \
+    message/messageitem.h
 
 
 
