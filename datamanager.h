@@ -49,12 +49,13 @@ public:
     QString getFriendXByUin(QString X, QString uin);
     QString getGroupXByUin(QString X,QString uin);
     QString getDissXByUin(QString X,QString uin);
-
+    QString getPsessionid();
     //其他关键数据
     QString vfwebqq;
     QString loginReportUrl;
     QString getFriendUrl;
     QString getGroupUrl;
+    QString psessionid;
     QByteArray needMessag;
 
     //完成度

@@ -1,31 +1,12 @@
 #include "talkview.h"
 #include "ui_talkview.h"
-#include<QQuickItem>
-#include<QQuickView>
-#include<QVariant>
-#include<QQmlContext>
-#include"message/messageitem.h"
+
 #include"mynetworker.h"
 TalkView::TalkView(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::TalkView)
 {
     ui->setupUi(this);
-
-
-
-
-
-    QList<QObject*> list;
-    list.append(new MessageItem());
-    list.append(new MessageItem());
-    list.append(new MessageItem());
-    list.append(new MessageItem());
-    QQmlContext *ctxt = ui->bubbleList->rootContext();
-    ctxt->setContextProperty("myModel", QVariant::fromValue(list));
-
-    QUrl source("qrc:/BubbleList.qml");
-    ui->bubbleList->setSource(source);
     //信号槽
     connect(ui->backBar,&Mylabel::clicked,[=](){
         barClicked(0);
@@ -56,6 +37,11 @@ void TalkView::resizeEvent(QResizeEvent *event)
     ui->menuBar->setGeometry(mainSize.width()-44,7,26,26);
 }
 
+QList<MessageItem *> TalkView::getList(ChatMessageInfoList *list)
+{
+
+}
+
 void TalkView::on_sendButton_clicked()
 {
     QString text=ui->textEdit->toPlainText();
@@ -74,19 +60,21 @@ void TalkView::on_sendButton_clicked()
     }
 }
 
-void TalkView::showMessage(ChatMessageInfoList *list)
+void TalkView::showMessage(QList<MessageItem*> list)
 {
 
-    //QQmlContext *ctxt = ui->bubbleList->rootContext();
-    //ctxt->setContextProperty("", QVariant::fromValue(&list));
+    QQmlContext *ctxt = ui->bubbleList->rootContext();
+    ctxt->setContextProperty("myModel", QVariant::fromValue(list));
 
+    QUrl source("qrc:/BubbleList.qml");
+    ui->bubbleList->setSource(source);
 
 }
 
-void TalkView::setData(DataManager *value)
+void TalkView::setData(DataManager *value,MessageManager* messager)
 {
     data = value;
-    messager=new MessageManager(this);
+    this->messager=messager;
     messager->setDataManager(value);
 }
 
@@ -111,6 +99,8 @@ void TalkView::setAimUin(const QString &value, int type)
         break;
     }
 
+
+    //messager->getMessageListByUin(aimUin);
 
 }
 

@@ -67,6 +67,7 @@ data.append(QString("r={\"ptwebqq\":\"%1\",\"clientid\":53999199,\"psessionid\":
            loginReport();
        }else {
            loginMessage=object.value("result").toObject();
+
        }
 
     });
@@ -347,6 +348,11 @@ QString DataManager::getDissXByUin(QString X, QString uin)
         }
     }
     return "";
+}
+
+QString DataManager::getPsessionid()
+{
+    return loginMessage.value("psessionid").toString();
 }
 
 

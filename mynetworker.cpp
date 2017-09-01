@@ -49,6 +49,7 @@ void MyNetWorker::start()
     }else {
         reply=manager->get(*request);
     }
+
     connect(reply,&QNetworkReply::finished,[this](){
         emit this->netConnectComplete();
     });

@@ -3,6 +3,7 @@
 QString MessageManager::sendFriendUrl="http://d1.web2.qq.com/channel/send_buddy_msg2";
 QString MessageManager::sendGroupUrl="http://d1.web2.qq.com/channel/send_qun_msg2";
 QString MessageManager::sendDiscuUrl="http://d1.web2.qq.com/channel/send_discu_msg2";
+DataManager* MessageManager::data=NULL;
 MessageManager::MessageManager(QObject *parent) : QObject(parent)
 {
     //connect(this,SIGNAL(sendSuccess(QString)),this,SLOT(sendSuccessSLOT(QString));
@@ -91,7 +92,105 @@ void MessageManager::sendSuccessSLOT()
 
 }
 
+void MessageManager::poll2()
+{
+    PollNetworker* networker=new PollNetworker();
+    QThread* thread=new QThread(this);
+    networker->moveToThread(thread);
+    connect(thread,&QThread::started,networker,&PollNetworker::startPoll);
+    thread->start();
+
+}
+
+void MessageManager::addMessage(QString from_uin, ChatMessageInfo *message)
+{
+    allMessage[from_uin]->append(message);
+}
+
+
+
+
+
 ChatMessageInfoList* MessageManager::getMessageListByUin(QString uin)
 {
     return allMessage[uin];
+}
+
+PollNetworker::PollNetworker() {
+
+    poll2Url= "http://d1.web2.qq.com/channel/poll2";
+}
+
+PollNetworker::~PollNetworker() {}
+
+void PollNetworker::startPoll()
+{
+    while (true) {
+        doOncePoll();
+    }
+
+}
+
+void PollNetworker::stopPoll()
+{
+
+}
+
+void PollNetworker::doOncePoll()
+{
+    /*
+     * 由于心跳包是串行的,且都是一直等待,直到超时(120s)
+     */
+    QNetworkAccessManager manager;
+    QNetworkReply* reply;
+    QNetworkRequest request(poll2Url);
+    manager.setCookieJar(&MyNetWorker::cookieJar);
+    MyNetWorker::cookieJar.setParent(0);
+    request.setRawHeader("Referer","http://d1.web2.qq.com/proxy.html?v=20151105001&callback=1&id=2");
+    request.setRawHeader("Accept","*/*");
+    request.setRawHeader("DNT","1");
+    request.setRawHeader("User-Agent","Mozilla/5.0 (X11; Linux x86_64; rv:55.0) Gecko/20100101 Firefox/55.0");
+    // QString str=QString("r={\"ptwebqq\":\"%1\",\"clientid\":53999199,\"psessionid\":\"%2\",\"key\":\"\"}").arg(MyNetWorker::cookieJar.getValueByName("ptwebqq")).arg(MessageManager::data->getPsessionid());
+   QString str=QString("r={\"ptwebqq\":\"\",\"clientid\":53999199,\"psessionid\":\"%1\",\"key\":\"\"}").arg(MessageManager::data->getPsessionid());
+    QByteArray byte;
+    byte.append(str);
+    reply=manager.post(request,byte);
+
+    qDebug()<<byte;
+    QEventLoop loop;
+    connect(reply,&QNetworkReply::finished,&loop,&QEventLoop::quit);
+    loop.exec();
+    QJsonObject resultObject=QJsonDocument::fromJson(reply->readAll()).object();
+    int retcode=resultObject.value("retcode").toInt();
+    if(retcode==100001){
+        qDebug()<<result.value("errmsg").toString();
+    }else if(retcode==0){
+        //正常返回
+        QJsonArray messageArray=resultObject.value("result").toArray();
+        if(messageArray.size()==0){
+            //返回是空的,那么
+            qDebug()<<result.value("errmsg").toString();
+        }else {
+            //result不为空
+            for(auto item:messageArray){
+                int type;
+                QJsonObject oneMessage=item.toObject();
+                QString messageType=oneMessage.value("poll_type").toString();
+                if(messageType=="message"){
+                    //收到好友消息
+
+                }else if(messageType=="group_message"){
+                    //收到讨论组消息
+                }else if(messageType=="discu_message"){
+                    //收到讨论组的消息
+                }else {
+                    //其他处理
+                }
+            }
+        }
+    }
+
+
+
+
 }

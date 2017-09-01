@@ -16,9 +16,10 @@ void MyDialogManager::showLogin()
 
 void MyDialogManager::showWlecome(QString name)
 {
+    /*
      mainWorker();
      return;
-    /*************上面为测试专用代码*******************************/
+    ************上面为测试专用代码*******************************/
     login->close();
     welcome=new WelcomeDialog(name);
     welcome->show();
@@ -43,16 +44,22 @@ void MyDialogManager::mainWorker()
     //倘若一个窗口关闭,另一个窗口还没有show,那么QApplication就会立即quit,
 
 
-    //测试专用代码
-    return;
-    /**
 
+    /**
+        //测试专用代码
+        return;
 
       */
     welcome->close();
 
+
+    //初始化消息管理器
+
+    messager=new MessageManager(this);
+    messager->poll2();
+
     //将数据容器传给它
-    aimDialog->setData(dataManager);
+    aimDialog->setData(dataManager,messager);
     //构造完成再初始化
     QTimer::singleShot(0,aimDialog,&AimDialog::initFun);
 

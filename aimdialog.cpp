@@ -31,11 +31,11 @@ AimDialog::~AimDialog()
     delete ui;
 }
 
-void AimDialog::setData(DataManager *manager)
+void AimDialog::setData(DataManager *manager, MessageManager *messager)
 {
     this->data=manager;
     //同时将talkView的data设置为mannager共享数据源
-    ui->talkView->setData(manager);
+    ui->talkView->setData(manager,messager);
 
 }
 

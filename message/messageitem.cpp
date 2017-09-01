@@ -6,6 +6,7 @@ MessageItem::MessageItem(QObject *parent) : QObject(parent)
     m_name="demon";
     m_text="texfdsfjasdfkjdjfafjkldjlk这是样例文字t";
     m_time="13/34/23:23";
+    m_type=3;
     m_uin="uin";
 }
 

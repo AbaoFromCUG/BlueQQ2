@@ -3,6 +3,11 @@
 
 #include <QWidget>
 #include<QList>
+#include<QQuickItem>
+#include<QQuickView>
+#include<QVariant>
+#include<QQmlContext>
+#include"message/messageitem.h"
 #include<datamanager.h>
 #include"message/messagemanager.h"
 #include"message/chatmessageinfo.h"
@@ -20,14 +25,16 @@ public:
     ~TalkView();
     void setAimUin(const QString &value,int type);
 
-    void setData(DataManager *value);
+    void setData(DataManager *value, MessageManager *messager);
 
+public slots:
+    void showMessage(QList<MessageItem *> list);
 protected:
     void resizeEvent(QResizeEvent *event);
+    QList<MessageItem*> getList(ChatMessageInfoList* list);
 
 private slots:
     void on_sendButton_clicked();
-    void showMessage(ChatMessageInfoList *list);
 
 
 private:

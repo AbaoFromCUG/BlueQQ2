@@ -18,6 +18,7 @@
 #include"groupbar.h"
 #include"datamanager.h"
 #include"lib/framelesshelper.h"
+#include"message/messagemanager.h"
 struct oneMessage{
     QString uin;
     QString name;
@@ -37,7 +38,7 @@ public:
     explicit AimDialog(QWidget *parent = 0);
     ~AimDialog();
 
-    void setData(DataManager* manager);
+    void setData(DataManager* manager,MessageManager*messager);
 public slots:
     void initFun();
     void showChange(int status);

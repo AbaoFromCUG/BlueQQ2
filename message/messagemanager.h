@@ -23,15 +23,41 @@ public slots:
     void sendMessageToDiscu(QString uin, QString text);
 
     void sendSuccessSLOT();
-private:
+
+    void poll2();
+
+
+    void addMessage(QString from_uin,ChatMessageInfo* message);
+public:
+
     QHash<QString,ChatMessageInfoList*> allMessage;
-    DataManager* data;
+    static DataManager* data;
     ChatMessageInfoList* getMessageListByUin(QString uin);
     static QString sendFriendUrl;
     static QString sendGroupUrl;
     static QString sendDiscuUrl;
-    void dealMessage(QJsonObject message);
-    void dealMessage(QString uin,QString text);
 };
 
+class PollNetworker : public QObject
+{
+    Q_OBJECT
+public:
+    PollNetworker();
+    virtual ~PollNetworker();
+public slots:
+    void startPoll();
+    void stopPoll();
+    void doOncePoll();
+
+
+
+
+signals:
+    void getGroupMessage(ChatMessageInfo* message);
+    void getDiscusMessage(ChatMessageInfo* message);
+    void getFriendMessage(ChatMessageInfo* message);
+
+protected:
+    QString poll2Url ;
+};
 #endif // MESSAGEMANAGER_H

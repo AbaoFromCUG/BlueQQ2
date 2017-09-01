@@ -4,6 +4,7 @@
 #include"welcomedialog.h"
 #include <QObject>
 #include<datamanager.h>
+#include"message/messagemanager.h"
 #include"aimdialog.h"
 class MyDialogManager : public QObject
 {
@@ -16,6 +17,7 @@ private:
     LoginDialog* login;
     WelcomeDialog* welcome;
     DataManager* dataManager;
+    MessageManager* messager;
     AimDialog* aimDialog;
 
 signals:

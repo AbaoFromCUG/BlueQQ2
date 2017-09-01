@@ -19,9 +19,12 @@
  */
 enum MessageType{
     //设置为123,而不是默认的0,1,2
-    GroupMessage=1,   //群消息
-    Discu=2,           //讨论组消息
-    FriendMessage=3,   //好友
+    GroupMessage=1,   //收到的群消息
+    Discu=2,           //收到的讨论组消息
+    FriendMessage=3,   //收到的好友消息
+    SelfGroup=11,       //发送的的群消息
+    SelfDiscu=12,       //发送的讨论组消息
+    SelfFriend=13       //发送给好友的消息
 };
 class ChatMessageInfo : public QObject
 {
@@ -29,7 +32,16 @@ class ChatMessageInfo : public QObject
 public:
     explicit ChatMessageInfo(QObject *parent = nullptr);
     virtual ~ChatMessageInfo();
-
+    /*
+     * 因为一开始架构有问题,在后续的代码编写中,
+     * 发现ChatMessageInfo并不适合用来传递数据,
+     * 所以就不需要一下代码来方便注册这些东西了
+     * 而是采用MessageItem来单纯保存每个item需要的数据
+     * 在传递的时候,先通过消息管理器来获取ChatMessageInfo的队列,
+     * 然后转换为MessageItem来简化传值过程,
+     * 繁琐,在下次迭代需要优化
+     */
+/*
     Q_PROPERTY(QString aimUin READ aimUin WRITE setAimUin NOTIFY aimUinChanged)  //从哪个uin收到的,如gruoupId friendId
     Q_PROPERTY(QString senderUin READ senderUin WRITE setSenderUin NOTIFY senderUinChanged)
     Q_PROPERTY(QString contentData READ contentData WRITE setContentData NOTIFY contentDataChanged)
@@ -39,7 +51,7 @@ public:
     Q_PROPERTY(int messageId2 READ messageId2 WRITE setMessageId2 NOTIFY messageId2Changed)
     Q_PROPERTY(MessageType type READ type WRITE setType)
 
-
+*/
 
     QString aimUin();
 
