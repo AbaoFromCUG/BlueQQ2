@@ -9,41 +9,43 @@ Item {
     ListView{
        id: listView
        anchors.fill: parent
-        model:5  //myModel
-        delegate:myItem
+        model:myModel
+        delegate:MessageItem{
+            /*
+            m_img: "./images/demon/friend.jpg"
+            m_name: "Abao"
+            m_text: "蒋劲是个大傻逼,大啊大傻逼,大大傻逼,大啊大傻逼"
+            m_time: "12/13/21:12"
+            state: "group"
+            */
 
-        Component {
-            id:myItem
-            MessageItem{
-                /*
-                m_img: "./images/demon/friend.jpg"
-                m_name: "Abao"
-                m_text: "蒋劲是个大傻逼,大啊大傻逼,大大傻逼,大啊大傻逼"
-                m_time: "12/13/21:12"
-                state: "group"
-                */
+            m_name: name
+            m_img: imgSrc
+            m_text: text
+            m_time:time
+            state: {
+                switch(type){
+                case 1:
+                case 2:
+                    return "group"
+                    break;
+                case 3:
+                    return "friend"
+                    break;
+                default:
+                    return "self";
+                    break;
 
-                m_name: name
-                m_img: imgSrc
-                m_text: model.modelData.text
-                m_time: model.modelData.time
-                state: "group"
-
-
-
+                }
             }
 
         }
 
-    }
-    MouseArea{
-        width: 100
-        height: 100
 
-        onClicked: {
-            console.log(listView.model)
-        }
+
+
     }
+
 
 }
 
