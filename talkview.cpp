@@ -65,7 +65,6 @@ void TalkView::showMessage(QList<MessageItem*> list)
 
     QQmlContext *ctxt = ui->bubbleList->rootContext();
     ctxt->setContextProperty("myModel", QVariant::fromValue(list));
-
     QUrl source("qrc:/BubbleList.qml");
     ui->bubbleList->setSource(source);
 
@@ -100,6 +99,8 @@ void TalkView::setAimUin(const QString &value, int type)
     }
 
 
+    QList<MessageItem*> messList=messager->getShowItem(aimUin);
+    showMessage(messList);
     //messager->getMessageListByUin(aimUin);
 
 }

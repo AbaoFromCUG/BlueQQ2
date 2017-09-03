@@ -65,7 +65,7 @@ public:
 
     int messageId();
 
-    int messageId2();
+    //int messageId2();
 
     MessageType type();
 
@@ -76,7 +76,7 @@ signals:
     void contentDataChanged(QString arg);
     void dateChanged(QDate argDate);
     void timeChanged(QTime argTime);
-    void messageId2Changed(int argId);
+    //void messageId2Changed(int argId);
 public slots:
     void setAimUin(const QString &aimUin);
     void setSenderUin(const QString &senderUin);
@@ -84,7 +84,7 @@ public slots:
     void setDate(const QDate &date);
     void setTime(const QTime &time);
     void setMessageId(int messageId);
-    void setMessageId2(int messageId2);
+    //void setMessageId2(int messageId2);
     void setType(const MessageType &value);
 private:
     QString m_aimUin;
@@ -93,7 +93,7 @@ private:
     QDate m_date;
     QTime m_time;
     int m_messageId;
-    int m_messageId2;
+    //int m_messageId2;
     MessageType m_type;
 
 };

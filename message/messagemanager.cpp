@@ -98,12 +98,19 @@ void MessageManager::poll2()
     QThread* thread=new QThread(this);
     networker->moveToThread(thread);
     connect(thread,&QThread::started,networker,&PollNetworker::startPoll);
+    connect(networker,&PollNetworker::getMessage,[=](QString from_uin,ChatMessageInfo* message){
+        this->addMessage(from_uin,message);
+    });
     thread->start();
 
 }
 
 void MessageManager::addMessage(QString from_uin, ChatMessageInfo *message)
 {
+    if(!allMessage.contains(from_uin)){
+        allMessage.insert(from_uin,new ChatMessageInfoList);
+
+    }
     allMessage[from_uin]->append(message);
 }
 
@@ -114,6 +121,34 @@ void MessageManager::addMessage(QString from_uin, ChatMessageInfo *message)
 ChatMessageInfoList* MessageManager::getMessageListByUin(QString uin)
 {
     return allMessage[uin];
+}
+
+QList<MessageItem*> MessageManager::getShowItem(QString from_uin)
+{
+    if(!allMessage.contains(from_uin)){
+        return QList<MessageItem*>();
+    }else {
+        ChatMessageInfoList* list=allMessage[from_uin];
+        QList<MessageItem*> mess;
+        for(int i=0;i<list->length();i++){
+            ChatMessageInfo* itemMessage=list->at(i);
+            MessageItem *item=new MessageItem;
+            item->setUin(itemMessage->senderUin());
+            //
+            item->setName(data->getFriendName(itemMessage->senderUin()));
+            item->setTime(QDateTime(itemMessage->date(),itemMessage->time()).toString("yyyy-MM-dd hh:mm:ss"));
+            item->setImgSrc(":/images/demon/3.jpeg");
+            item->setText(itemMessage->contentData());
+            int s=itemMessage->type()/10;
+            if(s==0){
+                item->setType(itemMessage->type());
+            }else {
+                item->setType(3+item->type()%10);
+            }
+            mess.append(item);
+        }
+        return mess;
+    }
 }
 
 PollNetworker::PollNetworker() {
@@ -141,56 +176,115 @@ void PollNetworker::doOncePoll()
     /*
      * 由于心跳包是串行的,且都是一直等待,直到超时(120s)
      */
-    QNetworkAccessManager manager;
-    QNetworkReply* reply;
-    QNetworkRequest request(poll2Url);
-    manager.setCookieJar(&MyNetWorker::cookieJar);
-    MyNetWorker::cookieJar.setParent(0);
+    MyNetWorker request(poll2Url,FUN::POST);
     request.setRawHeader("Referer","http://d1.web2.qq.com/proxy.html?v=20151105001&callback=1&id=2");
     request.setRawHeader("Accept","*/*");
+    request.setRawHeader("Content-Type"," application/x-www-form-urlencoded");
     request.setRawHeader("DNT","1");
     request.setRawHeader("User-Agent","Mozilla/5.0 (X11; Linux x86_64; rv:55.0) Gecko/20100101 Firefox/55.0");
-    // QString str=QString("r={\"ptwebqq\":\"%1\",\"clientid\":53999199,\"psessionid\":\"%2\",\"key\":\"\"}").arg(MyNetWorker::cookieJar.getValueByName("ptwebqq")).arg(MessageManager::data->getPsessionid());
-   QString str=QString("r={\"ptwebqq\":\"\",\"clientid\":53999199,\"psessionid\":\"%1\",\"key\":\"\"}").arg(MessageManager::data->getPsessionid());
+
+    QString str=QString("r={\"ptwebqq\":\"%1\",\"clientid\":53999199,\"psessionid\":\"%2\",\"key\":\"\"}").arg(MyNetWorker::cookieJar.getValueByName("ptwebqq")).arg(MessageManager::data->getPsessionid());
+    //QString str=QString("r={\"ptwebqq\":\"\",\"clientid\":53999199,\"psessionid\":\"%1\",\"key\":\"\"}").arg(MessageManager::data->getPsessionid());
     QByteArray byte;
     byte.append(str);
-    reply=manager.post(request,byte);
+    request.setPOSTData(byte);
 
-    qDebug()<<byte;
     QEventLoop loop;
-    connect(reply,&QNetworkReply::finished,&loop,&QEventLoop::quit);
+    connect(&request,&MyNetWorker::netConnectComplete,&loop,&QEventLoop::quit);
+    request.start();
     loop.exec();
-    QJsonObject resultObject=QJsonDocument::fromJson(reply->readAll()).object();
+    QByteArray r=request.readAll();
+    qDebug()<<r;
+    QJsonObject resultObject=QJsonDocument::fromJson(r).object();
     int retcode=resultObject.value("retcode").toInt();
     if(retcode==100001){
-        qDebug()<<result.value("errmsg").toString();
+        qDebug()<<resultObject.value("errmsg").toString();
     }else if(retcode==0){
         //正常返回
         QJsonArray messageArray=resultObject.value("result").toArray();
         if(messageArray.size()==0){
             //返回是空的,那么
-            qDebug()<<result.value("errmsg").toString();
+            qDebug()<<resultObject.value("errmsg").toString();
         }else {
             //result不为空
+            /*
+             * "result": [{
+                "poll_type": "discu_message",
+                "value": {
+                  "content": [
+                    ["font", {
+                      "color": "000000",
+                      "name": "微软雅黑",
+                      "size": 10,
+                      "style": [0, 0, 0]
+                    }], "测试啊不错的"
+                  ],
+                  "did": 4144638746,
+                  "from_uin": 4144638746,
+                  "msg_id": 2,
+                  "msg_type": 5,
+                  "send_uin": 3766685460,
+                  "time": 1502972935,
+                  "to_uin": 2121738163
+                }
+              }],
+  */
             for(auto item:messageArray){
                 int type;
                 QJsonObject oneMessage=item.toObject();
                 QString messageType=oneMessage.value("poll_type").toString();
+                QJsonObject value=oneMessage.value("value").toObject();
+                //解析value
+                /*
+                 * 一个消息内容
+                 *
+                 * 五个公共消息特征
+                 */
+                QString content=value.value("content").toArray()[1].toString();
+
+                QString from_uin=QString::number((long long)value.value("from_uin").toDouble());
+                int msg_id=value.value("msg_id").toInt();
+                int msg_type=value.value("msg_type").toInt();
+                long long time=(long long)value.value("time").toDouble();
+                QDateTime msg_time=QDateTime::fromTime_t(time);
+                QString to_uin=QString::number((long long)value.value("to_uin").toDouble());
+
+                //组装成消息
+                ChatMessageInfo *message=new ChatMessageInfo();
+                message->setAimUin(from_uin);
+                message->setContentData(content);
+                message->setDate(msg_time.date());
+                message->setTime(msg_time.time());
+                message->setMessageId(msg_id);
                 if(messageType=="message"){
                     //收到好友消息
-
+                    /*
+                     * 好友消息,就只需要以上几个公共特征
+                     */
+                    message->setType(MessageType::FriendMessage);
                 }else if(messageType=="group_message"){
-                    //收到讨论组消息
+                    //收到群消息
+                    QString send_uin=QString::number((long long)value.value("send_uin").toDouble());
+                    message->setSenderUin(send_uin);
+                    message->setType(MessageType::GroupMessage);
                 }else if(messageType=="discu_message"){
                     //收到讨论组的消息
+                    QString send_uin=QString::number((long long)value.value("send_uin").toDouble());
+                    message->setSenderUin(send_uin);
+                    message->setType(MessageType::Discu);
                 }else {
                     //其他处理
+                    qDebug()<<messageArray;
                 }
+                emit getMessage(from_uin,message);
+
             }
         }
     }
 
-
+    if(retcode==103){
+        qDebug()<<byte;
+    }
 
 
 }

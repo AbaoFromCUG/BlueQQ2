@@ -49,6 +49,9 @@ public:
     QString getFriendXByUin(QString X, QString uin);
     QString getGroupXByUin(QString X,QString uin);
     QString getDissXByUin(QString X,QString uin);
+
+
+    QString getFriendName(QString uin);
     QString getPsessionid();
     //其他关键数据
     QString vfwebqq;
@@ -60,11 +63,12 @@ public:
 
     //完成度
     int count=0;
-    const int maxCount=4;
+    const int maxCount=6;
 
 
 signals:
     void getDataSuccess();
+    void doOneStep();
 
 public slots:
     void startInitData();

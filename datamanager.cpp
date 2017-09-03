@@ -11,6 +11,14 @@ DataManager::DataManager(QObject *parent) : QObject(parent)
     loginReportUrl="http://d1.web2.qq.com/channel/login2";
     getFriendUrl="http://s.web2.qq.com/api/get_user_friends2";
     getGroupUrl="http://s.web2.qq.com/api/get_group_name_list_mask2";
+
+
+    connect(this,&DataManager::doOneStep,[=](){
+        count++;
+        if(count>maxCount){
+            emit getDataSuccess();
+        }
+    });
 }
 
 DataManager::~DataManager(){
@@ -21,19 +29,19 @@ void DataManager::getVfwebqq()
 {
     //先拼凑出URL,这个URL主要有两个关键数据,ptwebqq(Cookie)和时间戳组成
     QString webqq=MyNetWorker::cookieJar.getValueByName("ptwebqq");
-    QString url=QString("http://s.web2.qq.com/api/getvfwebqq?ptwebqq=%1&clientid=53999199&psessionid=&t=%2").arg(webqq).arg(getT());
+    QString url=QString("https://s.web2.qq.com/api/getvfwebqq?ptwebqq=%1&clientid=53999199&psessionid=&t=%2").arg(webqq).arg(getT());
     //因为这个值是此后请求的关键值,所以不进行异步请求,就在主线程中进行
     //QThread* vfThread=new QThread();
     //list.append(vfThread);
     MyNetWorker networker(url);
     networker.setReferer("http://s.web2.qq.com/proxy.html?v=20130916001&callback=1&id=1");
     networker.setAccept("*/*");
+    networker.setRawHeader("Content-Type","application/x-www-form-urlencoded");
     networker.start();
     QEventLoop loop;
     connect(&networker,&MyNetWorker::netConnectComplete,&loop,&QEventLoop::quit);
     loop.exec();
     QByteArray byte=networker.readAll();
-    qDebug()<<"vfwebqq"<<byte;
     //开始解析
     QJsonObject object=QJsonDocument::fromJson(byte).object();
     int retcode=object.value("retcode").toInt();
@@ -43,7 +51,9 @@ void DataManager::getVfwebqq()
         getVfwebqq();
     }else {
         QJsonObject result=object.value("result").toObject();
+        qDebug()<<url;
         this->vfwebqq=result.value("vfwebqq").toString();
+        emit doOneStep();
     }
 }
 
@@ -67,7 +77,7 @@ data.append(QString("r={\"ptwebqq\":\"%1\",\"clientid\":53999199,\"psessionid\":
            loginReport();
        }else {
            loginMessage=object.value("result").toObject();
-
+           emit doOneStep();
        }
 
     });
@@ -105,10 +115,7 @@ void DataManager::getFriendList()
         }
         else {
             friendList=object.value("result").toObject();
-            this->count++;
-            if(count>=maxCount){
-                emit getDataSuccess();
-            }
+            emit doOneStep();
         }
     });
     gFThread->start();
@@ -134,10 +141,7 @@ void DataManager::getGroupList()
         }
         else {
             groupList=object.value("result").toObject();
-            this->count++;
-            if(count>=maxCount){
-                emit getDataSuccess();
-            }
+            emit doOneStep();
         }
     });
     gGThread->start();
@@ -166,10 +170,7 @@ void DataManager::getDiscusList()
             qDebug()<<url;
         }else {
             discusList=object.value("result").toObject();
-            this->count++;
-            if(count>=maxCount){
-                emit getDataSuccess();
-            }
+            emit doOneStep();
         }
     });
     gDThread->start();
@@ -193,11 +194,8 @@ void DataManager::getSelfInfo()
        if(status!=0){
            qDebug()<<"error  "<<url;
        }else {
-           this->selfInfor=object.value("result").toObject();
-           count++;
-           if(count>=maxCount){
-               emit getDataSuccess();
-           }
+           selfInfor=object.value("result").toObject();
+           emit doOneStep();
        }
     });
     gSThread->start();
@@ -206,7 +204,7 @@ void DataManager::getSelfInfo()
 
 void DataManager::getRecentList()
 {
-
+    emit doOneStep();
 }
 
 //获得时间戳
@@ -350,6 +348,16 @@ QString DataManager::getDissXByUin(QString X, QString uin)
     return "";
 }
 
+QString DataManager::getFriendName(QString uin)
+{
+    QString markName=getFriendXByUin("markname",uin);
+    if(markName.isEmpty()){
+        return getFriendXByUin("nick",uin);
+    }else {
+        return markName;
+    }
+}
+
 QString DataManager::getPsessionid()
 {
     return loginMessage.value("psessionid").toString();
@@ -364,6 +372,7 @@ void DataManager::startInitData()
     getGroupList();
     getDiscusList();
     getSelfInfo();
+    getRecentList();
 
 
 }

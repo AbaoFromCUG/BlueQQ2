@@ -79,7 +79,7 @@ int ChatMessageInfo::messageId()
 {
     return this->m_messageId;
 }
-
+/*
 void ChatMessageInfo::setMessageId2(int messageId2)
 {
     if(m_messageId2 != messageId2){
@@ -87,16 +87,17 @@ void ChatMessageInfo::setMessageId2(int messageId2)
         emit messageId2Changed(messageId2);
     }
 }
-
+*/
 void ChatMessageInfo::setType(const MessageType &value)
 {
     m_type = value;
 }
-
+/*
 int ChatMessageInfo::messageId2()
 {
     return this->m_messageId2;
 }
+*/
 
 MessageType ChatMessageInfo::ChatMessageInfo::type()
 {

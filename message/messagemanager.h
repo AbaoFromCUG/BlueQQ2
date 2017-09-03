@@ -5,6 +5,7 @@
 #include"mynetworker.h"
 #include"chatmessageinfo.h"
 #include"datamanager.h"
+#include"message/messageitem.h"
 class MessageManager : public QObject
 {
     Q_OBJECT
@@ -30,9 +31,14 @@ public slots:
     void addMessage(QString from_uin,ChatMessageInfo* message);
 public:
 
+
     QHash<QString,ChatMessageInfoList*> allMessage;
+
+
     static DataManager* data;
     ChatMessageInfoList* getMessageListByUin(QString uin);
+
+    QList<MessageItem*> getShowItem(QString from_uin);
     static QString sendFriendUrl;
     static QString sendGroupUrl;
     static QString sendDiscuUrl;
@@ -50,12 +56,12 @@ public slots:
     void doOncePoll();
 
 
+    //Mess getShowItem(QString from_uin);
+
 
 
 signals:
-    void getGroupMessage(ChatMessageInfo* message);
-    void getDiscusMessage(ChatMessageInfo* message);
-    void getFriendMessage(ChatMessageInfo* message);
+    void getMessage(QString from_uin,ChatMessageInfo* message);
 
 protected:
     QString poll2Url ;
