@@ -100,7 +100,10 @@ void TalkView::setAimUin(const QString &value, int type)
 
 
     QList<MessageItem*> messList=messager->getShowItem(aimUin);
-    showMessage(messList);
+    QList<MessageItem*> list;
+    list.append((new MessageItem));
+    list.append((new MessageItem));
+    showMessage(list);
     //messager->getMessageListByUin(aimUin);
 
 }

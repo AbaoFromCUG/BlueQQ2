@@ -160,6 +160,7 @@ PollNetworker::~PollNetworker() {}
 
 void PollNetworker::startPoll()
 {
+    QThread::sleep(20);
     while (true) {
         doOncePoll();
     }
@@ -196,7 +197,7 @@ void PollNetworker::doOncePoll()
     QByteArray r=request.readAll();
     qDebug()<<r;
     QJsonObject resultObject=QJsonDocument::fromJson(r).object();
-    int retcode=resultObject.value("retcode").toInt();
+     int retcode=resultObject.value("retcode").toInt();
     if(retcode==100001){
         qDebug()<<resultObject.value("errmsg").toString();
     }else if(retcode==0){

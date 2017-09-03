@@ -9,8 +9,8 @@
          * 但是登录了其他号不可以发送消息,所以猜测是跟这两个数据有关
          * 猜测不能设置为不变
          */
-        QNetworkCookie  pgvCookie("pgv_info","ssid=s8525559850");
-        QNetworkCookie pvid_Cookie("pgv_pvid","7745628854");
+        QNetworkCookie  pgvCookie("pgv_info","ssid=s2345559850");
+        QNetworkCookie pvid_Cookie("pgv_pvid","7745622344");
         pgvCookie.setDomain(".qq.com");
         pvid_Cookie.setDomain(".qq.com");
         this->insertCookie(pgvCookie);

@@ -27,6 +27,8 @@ LoginDialog::LoginDialog(QWidget *parent) :
 
     */
 
+
+
 }
 
 LoginDialog::~LoginDialog()
