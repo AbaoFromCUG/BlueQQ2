@@ -17,6 +17,7 @@ TalkView::TalkView(QWidget *parent) :
     connect(ui->menuBar,&Mylabel::clicked,[=](){
         barClicked(2);
     });
+
 }
 
 TalkView::~TalkView()
@@ -60,11 +61,15 @@ void TalkView::on_sendButton_clicked()
     }
 }
 
-void TalkView::showMessage(QList<MessageItem*> list)
+void TalkView::showMessage()
 {
+    QList<QObject*> messList=messager->getShowItem(aimUin);
+    QList<MessageItem*> list;
+    list.append((new MessageItem));
+    list.append((new MessageItem));
 
     QQmlContext *ctxt = ui->bubbleList->rootContext();
-    ctxt->setContextProperty("myModel", QVariant::fromValue(list));
+    ctxt->setContextProperty("myModel", QVariant::fromValue(messList));
     QUrl source("qrc:/BubbleList.qml");
     ui->bubbleList->setSource(source);
 
@@ -75,6 +80,9 @@ void TalkView::setData(DataManager *value,MessageManager* messager)
     data = value;
     this->messager=messager;
     messager->setDataManager(value);
+    connect(messager,&MessageManager::messageChanged,[=](){
+        showMessage();
+    });
 }
 
 void TalkView::setAimUin(const QString &value, int type)
@@ -99,11 +107,7 @@ void TalkView::setAimUin(const QString &value, int type)
     }
 
 
-    QList<MessageItem*> messList=messager->getShowItem(aimUin);
-    QList<MessageItem*> list;
-    list.append((new MessageItem));
-    list.append((new MessageItem));
-    showMessage(list);
+    showMessage();
     //messager->getMessageListByUin(aimUin);
 
 }

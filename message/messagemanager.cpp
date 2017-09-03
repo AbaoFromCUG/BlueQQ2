@@ -112,6 +112,7 @@ void MessageManager::addMessage(QString from_uin, ChatMessageInfo *message)
 
     }
     allMessage[from_uin]->append(message);
+    emit messageChanged();
 }
 
 
@@ -123,13 +124,13 @@ ChatMessageInfoList* MessageManager::getMessageListByUin(QString uin)
     return allMessage[uin];
 }
 
-QList<MessageItem*> MessageManager::getShowItem(QString from_uin)
+QList<QObject*> MessageManager::getShowItem(QString from_uin)
 {
     if(!allMessage.contains(from_uin)){
-        return QList<MessageItem*>();
+        return QList<QObject*>();
     }else {
         ChatMessageInfoList* list=allMessage[from_uin];
-        QList<MessageItem*> mess;
+        QList<QObject*> mess;
         for(int i=0;i<list->length();i++){
             ChatMessageInfo* itemMessage=list->at(i);
             MessageItem *item=new MessageItem;
@@ -160,7 +161,7 @@ PollNetworker::~PollNetworker() {}
 
 void PollNetworker::startPoll()
 {
-    QThread::sleep(20);
+    QThread::sleep(50);
     while (true) {
         doOncePoll();
     }
@@ -284,7 +285,7 @@ void PollNetworker::doOncePoll()
     }
 
     if(retcode==103){
-        qDebug()<<byte;
+         qDebug()<<byte;
     }
 
 

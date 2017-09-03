@@ -15,7 +15,7 @@ public:
 
 signals:
     void sendSuccess();
-
+    void messageChanged();
 public slots:
     void sendMessageToX(int X,QString uin, QString text);
     void setDataManager(DataManager *m);
@@ -38,7 +38,7 @@ public:
     static DataManager* data;
     ChatMessageInfoList* getMessageListByUin(QString uin);
 
-    QList<MessageItem*> getShowItem(QString from_uin);
+    QList<QObject*> getShowItem(QString from_uin);
     static QString sendFriendUrl;
     static QString sendGroupUrl;
     static QString sendDiscuUrl;
@@ -62,6 +62,7 @@ public slots:
 
 signals:
     void getMessage(QString from_uin,ChatMessageInfo* message);
+
 
 protected:
     QString poll2Url ;

@@ -28,7 +28,7 @@ public:
     void setData(DataManager *value, MessageManager *messager);
 
 public slots:
-    void showMessage(QList<MessageItem *> list);
+    void showMessage();
 protected:
     void resizeEvent(QResizeEvent *event);
     QList<MessageItem*> getList(ChatMessageInfoList* list);
